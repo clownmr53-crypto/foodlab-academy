@@ -1,0 +1,50 @@
+# Render Blueprint — FoodLab Academy
+# Deploy: Dashboard → New → Blueprint → connect this repo
+# Note: Render free Postgres was discontinued; use a paid Postgres plan
+#       or an external free Postgres (Neon, Supabase, etc.) and set DATABASE_URL.
+
+services:
+  - type: web
+    name: foodlab-academy
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: FoodLab Academy
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: foodlab-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: SEED_ON_DEPLOY
+        value: "false"
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FALLBACK_LOCALE
+        value: fr
+
+databases:
+  - name: foodlab-db
+    plan: basic_256mb
+    databaseName: foodlab
+    user: foodlab
