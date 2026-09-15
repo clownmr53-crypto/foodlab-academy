@@ -24,6 +24,11 @@ if [ -z "${APP_KEY:-}" ] && ! grep -qE '^APP_KEY=base64:' .env 2>/dev/null; then
   echo "[entrypoint] WARNING: APP_KEY is empty. Set APP_KEY on Render (php artisan key:generate --show)."
 fi
 
+# Laravel reads DB_URL; Render/common convention is DATABASE_URL
+if [ -n "${DATABASE_URL:-}" ] && [ -z "${DB_URL:-}" ]; then
+  export DB_URL="$DATABASE_URL"
+fi
+
 php artisan storage:link --force 2>/dev/null || php artisan storage:link || true
 
 php artisan config:cache
