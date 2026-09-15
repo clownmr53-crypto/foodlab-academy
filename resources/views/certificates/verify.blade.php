@@ -11,6 +11,7 @@
                     <p class="font-bold text-emerald-800">Certificat authentique</p>
                     <p>Titulaire : {{ $certificate->user->name }}</p>
                     <p>Code : {{ $certificate->code }}</p>
+                    <p>Type : {{ $certificate->label() }}</p>
                     <p>Émis le : {{ $certificate->issued_at->format('d/m/Y') }}</p>
                 </div>
             @else

@@ -9,6 +9,12 @@
                         @if(auth()->user()->hasPlan('starter') || auth()->user()->isAdmin())
                             <a href="{{ route('lms.index') }}" class="hover:text-emerald-700">Formation</a>
                             <a href="{{ route('calculator.index') }}" class="hover:text-emerald-700">Calculateur</a>
+                            <a href="{{ route('forum.index') }}" class="hover:text-emerald-700">Forum</a>
+                            <a href="{{ route('qa.index') }}" class="hover:text-emerald-700">Q&R</a>
+                            <a href="{{ route('templates.index') }}" class="hover:text-emerald-700">Templates</a>
+                        @endif
+                        @if(auth()->user()->isPremium() || auth()->user()->isAdmin() || auth()->check())
+                            <a href="{{ route('coaching.index') }}" class="hover:text-emerald-700">Coaching</a>
                         @endif
                         <a href="{{ route('payments.plans') }}" class="hover:text-emerald-700">Plans</a>
                         @if(auth()->user()->isAdmin())
@@ -19,6 +25,7 @@
             </div>
             <div class="hidden sm:flex items-center gap-3 text-sm">
                 @auth
+                    <a href="{{ route('certificates.mine') }}" class="text-slate-600 hover:text-emerald-700">Certificats</a>
                     <a href="{{ route('profile.edit') }}" class="text-slate-600 hover:text-emerald-700">{{ auth()->user()->name }}</a>
                     <form method="POST" action="{{ route('logout') }}">@csrf
                         <button class="text-slate-500 hover:text-red-600">Déconnexion</button>
@@ -36,6 +43,15 @@
     <div x-show="open" class="sm:hidden border-t px-4 py-3 space-y-2 text-sm" x-cloak>
         @auth
             <a class="block" href="{{ route('dashboard') }}">Tableau de bord</a>
+            @if(auth()->user()->hasPlan('starter') || auth()->user()->isAdmin())
+                <a class="block" href="{{ route('lms.index') }}">Formation</a>
+                <a class="block" href="{{ route('calculator.index') }}">Calculateur</a>
+                <a class="block" href="{{ route('forum.index') }}">Forum</a>
+                <a class="block" href="{{ route('qa.index') }}">Q&R</a>
+                <a class="block" href="{{ route('templates.index') }}">Templates</a>
+            @endif
+            <a class="block" href="{{ route('coaching.index') }}">Coaching</a>
+            <a class="block" href="{{ route('certificates.mine') }}">Certificats</a>
             <a class="block" href="{{ route('payments.plans') }}">Plans</a>
             <form method="POST" action="{{ route('logout') }}">@csrf<button>Déconnexion</button></form>
         @else

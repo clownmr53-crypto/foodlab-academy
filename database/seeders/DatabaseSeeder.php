@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Faq;
+use App\Models\ForumCategory;
 use App\Models\LegalPage;
 use App\Models\Lesson;
 use App\Models\Module;
+use App\Models\QaSession;
+use App\Models\ResourceTemplate;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -154,5 +157,60 @@ class DatabaseSeeder extends Seeder
         foreach ($legals as $slug => [$title, $content]) {
             LegalPage::updateOrCreate(['slug' => $slug], compact('title', 'content'));
         }
+
+        // --- Backlog V2 sample data ---
+        $forumCats = [
+            ['Questions générales', 'questions-generales', 'Présentations et questions libres.', 1],
+            ['Coût de revient', 'cout-de-revient', 'Astuces calculateur et pricing.', 2],
+            ['Succès & témoignages', 'succes', 'Partagez vos victoires business.', 3],
+        ];
+        foreach ($forumCats as [$name, $slug, $desc, $order]) {
+            ForumCategory::updateOrCreate(
+                ['slug' => $slug],
+                ['name' => $name, 'description' => $desc, 'order' => $order, 'is_published' => true]
+            );
+        }
+
+        QaSession::updateOrCreate(
+            ['title' => 'Q&R FoodLab — session démo'],
+            [
+                'description' => 'Session mensuelle de questions-réponses avec l’équipe pédagogique.',
+                'session_at' => now()->addDays(14)->setTime(18, 0),
+                'visio_link' => 'https://meet.example.com/foodlab-qa',
+                'replay_url' => null,
+                'is_published' => true,
+            ]
+        );
+        QaSession::updateOrCreate(
+            ['title' => 'Q&R FoodLab — replay exemple'],
+            [
+                'description' => 'Exemple de session passée avec replay.',
+                'session_at' => now()->subDays(30)->setTime(18, 0),
+                'visio_link' => null,
+                'replay_url' => 'https://example.com/replay-foodlab',
+                'is_published' => true,
+            ]
+        );
+
+        ResourceTemplate::updateOrCreate(
+            ['title' => 'Fiche technique produit (modèle)'],
+            [
+                'description' => 'Template Excel/Google Sheets pour structurer une fiche technique.',
+                'file_path' => null,
+                'external_url' => 'https://docs.google.com/spreadsheets',
+                'is_published' => true,
+                'order' => 1,
+            ]
+        );
+        ResourceTemplate::updateOrCreate(
+            ['title' => 'Grille de suivi des marges'],
+            [
+                'description' => 'Suivez vos marges hebdomadaires par produit.',
+                'file_path' => null,
+                'external_url' => 'https://docs.google.com/spreadsheets',
+                'is_published' => true,
+                'order' => 2,
+            ]
+        );
     }
 }

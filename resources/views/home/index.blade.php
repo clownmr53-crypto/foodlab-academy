@@ -7,8 +7,10 @@
     <title>FoodLab Academy — Formation food business</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>[x-cloak]{display:none!important}</style>
+    @include('components.analytics-snippets')
 </head>
 <body class="font-sans antialiased bg-stone-50 text-slate-800">
+@include('components.analytics-body')
 @include('layouts.navigation')
 <section class="bg-gradient-to-br from-emerald-700 to-teal-800 text-white">
     <div class="max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
@@ -74,5 +76,6 @@
 </section>
 @include('layouts.footer')
 <x-cookie-banner />
+@include('components.whatsapp-float')
 </body>
 </html>

@@ -7,7 +7,8 @@
     <h1>{{ $title }}</h1>
     <p>Décerné à</p>
     <h2>{{ $user->name }}</h2>
-    <p>pour avoir complété le parcours Premium FoodLab Academy.</p>
+    <p>{{ $subtitle ?? 'pour avoir complété le parcours FoodLab Academy.' }}</p>
+    <p>Type : {{ $certificate->type === 'starter' ? 'Participation Starter' : 'Premium' }}</p>
     <p>Code : {{ $certificate->code }}</p>
     <p>Date : {{ $certificate->issued_at->format('d/m/Y') }}</p>
     <div class="qr">{!! $qrSvg !!}</div>

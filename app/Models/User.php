@@ -82,8 +82,39 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(CalculatorSession::class);
     }
 
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    /** @deprecated Use certificates() / premiumCertificate() — kept for MVP compatibility */
     public function certificate(): HasOne
     {
-        return $this->hasOne(Certificate::class);
+        return $this->hasOne(Certificate::class)->where('type', Certificate::TYPE_PREMIUM);
+    }
+
+    public function premiumCertificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class)->where('type', Certificate::TYPE_PREMIUM);
+    }
+
+    public function starterCertificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class)->where('type', Certificate::TYPE_STARTER);
+    }
+
+    public function forumThreads(): HasMany
+    {
+        return $this->hasMany(ForumThread::class);
+    }
+
+    public function forumPosts(): HasMany
+    {
+        return $this->hasMany(ForumPost::class);
+    }
+
+    public function coachingRequests(): HasMany
+    {
+        return $this->hasMany(CoachingRequest::class);
     }
 }

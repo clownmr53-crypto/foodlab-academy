@@ -40,6 +40,9 @@ class CalculatorController extends Controller
             'packaging' => ['nullable', 'numeric', 'min:0'],
             'yield_units' => ['required', 'numeric', 'min:1'],
             'margin_percent' => ['nullable', 'numeric', 'min:0', 'max:500'],
+            'market_price' => ['nullable', 'numeric', 'min:0'],
+            'fixed_costs' => ['nullable', 'numeric', 'min:0'],
+            'selling_price' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $results = $calculator->calculate($data);

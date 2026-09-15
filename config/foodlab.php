@@ -51,7 +51,16 @@ return [
     'certificate' => [
         'issuer' => env('FOODLAB_CERT_ISSUER', 'FoodLab Academy'),
         'title' => 'Certification Premium FoodLab Academy',
+        'starter_title' => 'Certificat de participation Starter',
     ],
+
+    'calendly_url' => env('CALENDLY_URL', ''),
+
+    'meta_pixel_id' => env('META_PIXEL_ID', ''),
+    'gtm_id' => env('GTM_ID', ''),
+
+    'whatsapp_number' => env('WHATSAPP_NUMBER', ''),
+    'whatsapp_url' => env('WHATSAPP_URL', ''),
 
     /*
     |--------------------------------------------------------------------------

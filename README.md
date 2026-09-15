@@ -1,4 +1,4 @@
-# FoodLab Academy (MVP)
+# FoodLab Academy
 
 LMS francophone pour métiers de bouche — Laravel + Blade, SQLite en local.
 
@@ -47,15 +47,26 @@ Webhooks :
 - Stripe : `POST /webhooks/stripe`
 - Mobile Money : `POST /webhooks/mobile-money`
 
-## Fonctionnalités MVP
+## Fonctionnalités
 
-- Auth (inscription, vérification e-mail, reset, profil pays/secteur/niveau)
+### MVP
+- Auth (inscription, vérification e-mail, reset, profil pays/secteur/niveau, Google OAuth)
 - Plans Starter / Premium, upgrade, reçus e-mail
 - LMS 6 modules (4–6 verrouillés Starter), progression, embeds vidéo
 - Calculateur coût de revient + PDF + Excel
 - Certificat Premium PDF + QR, vérification publique `/verify-certificate`
 - Admin : modules/leçons, témoignages, FAQ, pages légales, messages contact
 - CGV / mentions / confidentialité + bannière cookies
+
+### Backlog V2
+- Forum communauté (`/forum`) — catégories, sujets, réponses, modération admin
+- Réservation coaching (`/coaching`) — embed Calendly ou formulaire DB
+- Q&R mensuelles (`/qa`) — CRUD admin + liste membres
+- Bibliothèque templates (`/templates`) — upload admin, téléchargement membres
+- Calculateur : seuil de rentabilité + graphique Chart.js + comparaison prix marché
+- Certificat de participation Starter (modules 1–3) distinct du Premium
+- Meta Pixel + GTM (snippets conditionnels)
+- Bouton WhatsApp flottant
 
 ## Tests
 
@@ -178,6 +189,6 @@ Le fichier `foodlab-academy.zip` (à la racine workspace) exclut `vendor/`, `nod
 
 Après extraction : `composer install`, `cp .env.example .env`, `key:generate`, `migrate --seed`, `npm i && npm run build`.
 
-## Hors scope (V2)
+## Hors scope
 
-Forum, coaching, Q&A, bibliothèque de templates, Chart.js, comparaison marché, certificat Starter, Meta Pixel/GTM, WhatsApp flottant, load tests.
+Load testing suite (non produit). Pas de Livewire / SPA Vue.

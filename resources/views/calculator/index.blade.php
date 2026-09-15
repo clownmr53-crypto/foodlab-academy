@@ -30,6 +30,14 @@
                 <div><x-input-label value="Nombre de portions" /><x-text-input type="number" step="0.01" name="yield_units" class="w-full mt-1" value="1" required /></div>
                 <div><x-input-label value="Marge %" /><x-text-input type="number" step="0.01" name="margin_percent" class="w-full mt-1" value="30" /></div>
             </div>
+            <div class="border-t pt-4 space-y-3">
+                <p class="font-medium text-sm text-slate-700">Rentabilité & marché</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><x-input-label value="Coûts fixes (seuil)" /><x-text-input type="number" step="0.01" name="fixed_costs" class="w-full mt-1" placeholder="= frais généraux si vide" /></div>
+                    <div><x-input-label value="Prix de vente unitaire" /><x-text-input type="number" step="0.01" name="selling_price" class="w-full mt-1" placeholder="= prix suggéré si vide" /></div>
+                    <div class="col-span-2"><x-input-label value="Prix marché (comparaison)" /><x-text-input type="number" step="0.01" name="market_price" class="w-full mt-1" placeholder="Optionnel" /></div>
+                </div>
+            </div>
             <x-primary-button>Calculer & enregistrer</x-primary-button>
         </form>
         <div>

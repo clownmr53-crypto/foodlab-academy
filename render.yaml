@@ -66,6 +66,16 @@ services:
         sync: false
       - key: GOOGLE_REDIRECT_URI
         sync: false
+      - key: CALENDLY_URL
+        sync: false
+      - key: META_PIXEL_ID
+        sync: false
+      - key: GTM_ID
+        sync: false
+      - key: WHATSAPP_URL
+        sync: false
+      - key: WHATSAPP_NUMBER
+        sync: false
 
 databases:
   - name: foodlab-db

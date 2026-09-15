@@ -22,9 +22,9 @@ class DashboardController extends Controller
         $totalLessons = $modules->sum(fn ($m) => $m->lessons->where('is_published', true)->count());
         $done = $completedLessonIds->count();
 
-        if ($user->isPremium() || $user->isAdmin()) {
+        if ($user->hasPlan('starter') || $user->isAdmin()) {
             $certificates->issueIfEligible($user);
-            $user->load('certificate');
+            $user->load('certificates');
         }
 
         return view('dashboard', [

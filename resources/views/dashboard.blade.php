@@ -16,11 +16,11 @@
                 <p class="text-2xl font-bold">{{ $progressPercent }}%</p>
             </div>
             <div class="rounded-xl bg-white border p-5">
-                <p class="text-sm text-slate-500">Certificat</p>
-                @if($user->certificate)
-                    <a href="{{ route('certificates.mine') }}" class="text-emerald-700 font-semibold underline">Voir mon certificat</a>
+                <p class="text-sm text-slate-500">Certificats</p>
+                @if($user->certificates()->exists())
+                    <a href="{{ route('certificates.mine') }}" class="text-emerald-700 font-semibold underline">Voir mes certificats</a>
                 @else
-                    <p class="text-slate-600 text-sm">Disponible après parcours Premium complet.</p>
+                    <p class="text-slate-600 text-sm">Starter (modules 1–3) ou Premium (parcours complet).</p>
                 @endif
             </div>
         </div>

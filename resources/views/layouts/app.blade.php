@@ -9,8 +9,11 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>[x-cloak]{display:none!important}</style>
+        @include('components.analytics-snippets')
+        @stack('head')
     </head>
     <body class="font-sans antialiased bg-stone-50 text-slate-800">
+        @include('components.analytics-body')
         <div class="min-h-screen">
             @include('layouts.navigation')
             @isset($header)
@@ -36,5 +39,7 @@
             @include('layouts.footer')
         </div>
         <x-cookie-banner />
+        @include('components.whatsapp-float')
+        @stack('scripts')
     </body>
 </html>
