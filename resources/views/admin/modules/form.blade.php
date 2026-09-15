@@ -8,6 +8,7 @@
             <div><x-input-label value="Titre" /><x-text-input name="title" class="w-full mt-1" :value="old('title', $module->title)" required /></div>
             <div><x-input-label value="Slug" /><x-text-input name="slug" class="w-full mt-1" :value="old('slug', $module->slug)" /></div>
             <div><x-input-label value="Description" /><textarea name="description" class="w-full mt-1 rounded-md border-stone-300" rows="3">{{ old('description', $module->description) }}</textarea></div>
+            <div><x-input-label value="Livrable" /><x-text-input name="deliverable" class="w-full mt-1" :value="old('deliverable', $module->deliverable)" placeholder="Ex. Fiche produit complète" /></div>
             <div><x-input-label value="Ordre" /><x-text-input type="number" name="order" class="w-full mt-1" :value="old('order', $module->order ?: 1)" required /></div>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="is_premium_only" value="1" @checked(old('is_premium_only', $module->is_premium_only))> Premium uniquement</label>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="is_published" value="1" @checked(old('is_published', $module->exists ? $module->is_published : true))> Publié</label>

@@ -32,5 +32,8 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="FOODLAB_STARTER_PRICE" value="0"/>
+        <env name="FOODLAB_PREMIUM_PRICE" value="149000"/>
+        <env name="FOODLAB_CURRENCY" value="XOF"/>
     </php>
 </phpunit>

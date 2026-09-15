@@ -10,6 +10,9 @@
                             @if($module->is_premium_only)<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Premium</span>@endif
                         </h3>
                         <p class="text-sm text-slate-600 mt-1">{{ $module->description }}</p>
+                        @if($module->deliverable)
+                            <p class="text-xs text-emerald-800 mt-1">📄 Livrable : {{ $module->deliverable }}</p>
+                        @endif
                         <ul class="mt-3 text-sm space-y-1">
                             @foreach($module->lessons as $lesson)
                                 <li class="flex items-center gap-2">

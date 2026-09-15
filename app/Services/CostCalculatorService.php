@@ -7,19 +7,7 @@ class CostCalculatorService
     /**
      * Calcule le coût de revient, seuil de rentabilité et écart marché.
      *
-     * @param  array{
-     *   product_name?: string,
-     *   ingredients: list<array{name?: string, quantity: float|int|string, unit_cost: float|int|string}>,
-     *   labor_hours?: float|int|string,
-     *   labor_rate?: float|int|string,
-     *   overhead?: float|int|string,
-     *   packaging?: float|int|string,
-     *   yield_units?: float|int|string,
-     *   margin_percent?: float|int|string,
-     *   market_price?: float|int|string|null,
-     *   fixed_costs?: float|int|string|null,
-     *   selling_price?: float|int|string|null
-     * }  $inputs
+     * @param  array<string, mixed>  $inputs
      * @return array<string, mixed>
      */
     public function calculate(array $inputs): array
@@ -41,24 +29,54 @@ class CostCalculatorService
             ];
         }
 
+        $applyYieldLoss = filter_var($inputs['apply_yield_loss'] ?? false, FILTER_VALIDATE_BOOL);
+        $yieldLossPercent = max(0.0, min(99.0, (float) ($inputs['yield_loss_percent'] ?? 0)));
+        if ($applyYieldLoss && $yieldLossPercent > 0) {
+            $factor = 1 / (1 - ($yieldLossPercent / 100));
+            $ingredientsTotal = round($ingredientsTotal * $factor, 2);
+            foreach ($ingredientLines as &$line) {
+                $line['total'] = round($line['total'] * $factor, 2);
+            }
+            unset($line);
+        }
+
         $laborHours = (float) ($inputs['labor_hours'] ?? 0);
         $laborRate = (float) ($inputs['labor_rate'] ?? 0);
         $laborTotal = round($laborHours * $laborRate, 2);
         $overhead = round((float) ($inputs['overhead'] ?? 0), 2);
         $packaging = round((float) ($inputs['packaging'] ?? 0), 2);
         $yieldUnits = max(1.0, (float) ($inputs['yield_units'] ?? 1));
-        $marginPercent = (float) ($inputs['margin_percent'] ?? 30);
+
+        $marginMode = (string) ($inputs['margin_mode'] ?? 'markup_on_cost');
+        if (! in_array($marginMode, ['markup_on_cost', 'margin_on_price', 'fixed_amount'], true)) {
+            $marginMode = 'markup_on_cost';
+        }
+        $marginValue = (float) ($inputs['margin_value'] ?? ($inputs['margin_percent'] ?? 30));
+        $marginPercent = $marginMode === 'fixed_amount' ? 0.0 : $marginValue;
 
         $totalCost = round($ingredientsTotal + $laborTotal + $overhead + $packaging, 2);
         $unitCost = round($totalCost / $yieldUnits, 2);
-        $suggestedPrice = round($unitCost * (1 + ($marginPercent / 100)), 2);
-        $unitMargin = round($suggestedPrice - $unitCost, 2);
 
-        // Variable cost per unit ≈ matières + MO + emballage (hors frais généraux)
+        $suggestedPrice = match ($marginMode) {
+            'margin_on_price' => $marginValue < 100
+                ? round($unitCost / (1 - ($marginValue / 100)), 2)
+                : round($unitCost * 2, 2),
+            'fixed_amount' => round($unitCost + $marginValue, 2),
+            default => round($unitCost * (1 + ($marginValue / 100)), 2),
+        };
+
+        $unitMargin = round($suggestedPrice - $unitCost, 2);
+        if ($marginMode !== 'fixed_amount' && $suggestedPrice > 0) {
+            $marginPercent = $marginMode === 'margin_on_price'
+                ? $marginValue
+                : round(($unitMargin / $unitCost) * 100, 2);
+        } elseif ($suggestedPrice > 0) {
+            $marginPercent = round(($unitMargin / $suggestedPrice) * 100, 2);
+        }
+
         $variableTotal = round($ingredientsTotal + $laborTotal + $packaging, 2);
         $variableUnitCost = round($variableTotal / $yieldUnits, 2);
 
-        // Fixed costs: explicit override or overhead
         $fixedCosts = isset($inputs['fixed_costs']) && $inputs['fixed_costs'] !== null && $inputs['fixed_costs'] !== ''
             ? round((float) $inputs['fixed_costs'], 2)
             : $overhead;
@@ -84,7 +102,6 @@ class CostCalculatorService
             $marketDeltaVsSuggested = round($marketPrice - $suggestedPrice, 2);
         }
 
-        // Chart data (cost breakdown + break-even illustration)
         $chartBreakdown = [
             'labels' => ['Ingrédients', 'Main d\'œuvre', 'Frais généraux', 'Emballage'],
             'values' => [
@@ -97,6 +114,14 @@ class CostCalculatorService
 
         return [
             'product_name' => (string) ($inputs['product_name'] ?? 'Produit'),
+            'sector' => (string) ($inputs['sector'] ?? ''),
+            'maturity_level' => (string) ($inputs['maturity_level'] ?? ''),
+            'currency' => (string) ($inputs['currency'] ?? 'FCFA'),
+            'unit_label' => (string) ($inputs['unit_label'] ?? 'unité'),
+            'apply_yield_loss' => $applyYieldLoss,
+            'yield_loss_percent' => $yieldLossPercent,
+            'margin_mode' => $marginMode,
+            'margin_value' => $marginValue,
             'ingredient_lines' => $ingredientLines,
             'ingredients_total' => round($ingredientsTotal, 2),
             'labor_total' => $laborTotal,

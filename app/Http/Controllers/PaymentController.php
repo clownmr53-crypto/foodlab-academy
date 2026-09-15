@@ -33,7 +33,16 @@ class PaymentController extends Controller
             return back()->with('error', 'Vous êtes déjà en Premium.');
         }
 
+        $planConfig = config('foodlab.plans.'.$data['plan']);
         $payment = $activation->createPending($user, $data['plan'], $data['provider']);
+
+        // Starter gratuit (0 FCFA) : activation immédiate sans passer par un PSP
+        if ((int) ($planConfig['price'] ?? 0) <= 0) {
+            $activation->activate($payment);
+
+            return redirect()->route('payments.success', $payment)
+                ->with('status', 'Plan Starter activé gratuitement.');
+        }
 
         if ($data['provider'] === 'fake' || app()->environment('local', 'testing')) {
             if ($data['provider'] === 'fake' || $request->boolean('simulate')) {

@@ -70,12 +70,12 @@ class RegisterPayLmsFlowTest extends TestCase
             'plan' => 'starter',
             'provider' => 'fake',
         ]);
-        $checkout->assertOk();
-
-        $payment = Payment::where('user_id', $user->id)->latest()->firstOrFail();
-        $this->post(route('payments.simulate', $payment))->assertRedirect();
+        // Starter à 0 FCFA : activation immédiate
+        $checkout->assertRedirect();
 
         $this->assertSame('starter', $user->fresh()->plan);
+        $payment = Payment::where('user_id', $user->id)->latest()->firstOrFail();
+        $this->assertSame('paid', $payment->status);
         $this->actingAs($user->fresh());
 
         $this->get(route('lms.index'))->assertOk();

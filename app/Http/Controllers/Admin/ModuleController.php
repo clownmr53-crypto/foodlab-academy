@@ -59,6 +59,7 @@ class ModuleController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'deliverable' => ['nullable', 'string', 'max:255'],
             'order' => ['required', 'integer', 'min:1'],
             'is_premium_only' => ['sometimes', 'boolean'],
             'is_published' => ['sometimes', 'boolean'],

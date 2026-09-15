@@ -4,6 +4,27 @@
         @php $r = $session->results; @endphp
         <div class="bg-white border rounded-xl p-6 space-y-4">
             <p class="text-lg font-semibold">{{ $r['product_name'] ?? '' }}</p>
+            @if(!empty($r['sector']) || !empty($r['maturity_level']) || !empty($r['currency']))
+                <p class="text-xs text-slate-500">
+                    @if(!empty($r['sector'])) Secteur : {{ $r['sector'] }} · @endif
+                    @if(!empty($r['maturity_level'])) Maturité : {{ $r['maturity_level'] }} · @endif
+                    Devise : {{ $r['currency'] ?? 'FCFA' }}
+                    @if(!empty($r['unit_label'])) · Unité : {{ $r['unit_label'] }}@endif
+                </p>
+            @endif
+            @if(!empty($r['apply_yield_loss']))
+                <p class="text-xs text-amber-800">Perte de rendement appliquée : {{ $r['yield_loss_percent'] ?? 0 }}%</p>
+            @endif
+            @if(!empty($r['margin_mode']))
+                <p class="text-xs text-slate-500">Mode de marge :
+                    @switch($r['margin_mode'])
+                        @case('margin_on_price') % sur le prix de vente @break
+                        @case('fixed_amount') montant fixe @break
+                        @default % sur le coût
+                    @endswitch
+                    ({{ $r['margin_value'] ?? $r['margin_percent'] ?? '' }})
+                </p>
+            @endif
             <table class="w-full text-sm">
                 <thead><tr class="text-left border-b"><th class="py-2">Ingrédient</th><th>Qté</th><th>Coût u.</th><th>Total</th></tr></thead>
                 <tbody>

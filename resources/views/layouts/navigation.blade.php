@@ -3,6 +3,11 @@
         <div class="flex justify-between h-16">
             <div class="flex items-center gap-6">
                 <a href="{{ route('home') }}" class="font-bold text-emerald-700 text-lg">FoodLab Academy</a>
+                <div class="hidden sm:flex gap-4 text-sm">
+                    <a href="{{ route('tastebox') }}" class="hover:text-emerald-700">TasteBox</a>
+                    <a href="{{ route('about') }}" class="hover:text-emerald-700">À propos</a>
+                    <a href="{{ route('contact.create') }}" class="hover:text-emerald-700">Contact</a>
+                </div>
                 @auth
                     <div class="hidden sm:flex gap-4 text-sm">
                         <a href="{{ route('dashboard') }}" class="hover:text-emerald-700">Tableau de bord</a>
@@ -55,6 +60,9 @@
             <a class="block" href="{{ route('payments.plans') }}">Plans</a>
             <form method="POST" action="{{ route('logout') }}">@csrf<button>Déconnexion</button></form>
         @else
+            <a class="block" href="{{ route('tastebox') }}">TasteBox</a>
+            <a class="block" href="{{ route('about') }}">À propos</a>
+            <a class="block" href="{{ route('contact.create') }}">Contact</a>
             <a class="block" href="{{ route('login') }}">Connexion</a>
             <a class="block" href="{{ route('register') }}">Inscription</a>
         @endauth

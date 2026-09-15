@@ -3,6 +3,8 @@
     <div class="max-w-2xl mx-auto py-8 px-4">
         <div class="bg-white border rounded-xl p-6 space-y-3">
             <p><strong>De :</strong> {{ $message->name }} &lt;{{ $message->email }}&gt;</p>
+            @if($message->whatsapp)<p><strong>WhatsApp :</strong> {{ $message->whatsapp }}</p>@endif
+            @if($message->country)<p><strong>Pays :</strong> {{ $message->country }}</p>@endif
             <p><strong>Sujet :</strong> {{ $message->subject ?: '—' }}</p>
             <p class="whitespace-pre-wrap">{{ $message->message }}</p>
             <form method="POST" action="{{ route('admin.contact.destroy', $message) }}">@csrf @method('DELETE')

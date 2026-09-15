@@ -79,25 +79,39 @@ class DatabaseSeeder extends Seeder
         );
 
         $modulesData = [
-            [1, 'Fondamentaux du coût de revient', 'Comprendre les bases du pricing alimentaire.', false],
-            [2, 'Ingrédients et fiches techniques', 'Structurer vos recettes et coûts matières.', false],
-            [3, 'Main d\'œuvre et charges', 'Intégrer le travail et les frais dans vos prix.', false],
-            [4, 'Stratégie de marge Premium', 'Optimiser marges et positionnement.', true],
-            [5, 'Pilotage et tableaux de bord', 'Suivre rentabilité et indicateurs clés.', true],
-            [6, 'Mise à l\'échelle & certification', 'Industrialiser et valider vos acquis.', true],
+            [1, 'Conception du produit alimentaire', 'Développement de recette, choix du format et packaging, positionnement marché.', 'Fiche produit complète', false],
+            [2, 'Calcul des coûts de revient', 'Ingrédients, emballage, main-d\'œuvre, transport et logistique.', 'Tableau de coûts complet', false],
+            [3, 'Fixation des prix et stratégie de marge', 'Analyse concurrence, calcul de marge optimale, stratégies de pricing.', 'Grille tarifaire validée', false],
+            [4, 'Réglementation et normes alimentaires', 'Normes sanitaires ANADA/FDA, procédures de certification, étiquetage.', 'Dossier de certification', true],
+            [5, 'Stratégie de lancement et distribution', 'Canaux de distribution, logistique de livraison, gestion des stocks.', 'Plan de distribution', true],
+            [6, 'Marketing et vente pour produits alimentaires', 'Branding, marketing digital, techniques de vente B2B et B2C.', 'Plan marketing 90 jours', true],
         ];
 
-        foreach ($modulesData as [$order, $title, $desc, $premium]) {
-            $module = Module::updateOrCreate(
-                ['slug' => Str::slug($title)],
-                [
-                    'title' => $title,
-                    'description' => $desc,
-                    'order' => $order,
-                    'is_premium_only' => $premium,
-                    'is_published' => true,
-                ]
-            );
+        $keptModuleIds = [];
+        foreach ($modulesData as [$order, $title, $desc, $deliverable, $premium]) {
+            $module = Module::query()->where('order', $order)->first();
+            if (! $module) {
+                $module = new Module(['order' => $order]);
+            }
+            $module->fill([
+                'title' => $title,
+                'slug' => Str::slug($title),
+                'description' => $desc,
+                'deliverable' => $deliverable,
+                'order' => $order,
+                'is_premium_only' => $premium,
+                'is_published' => true,
+            ]);
+            // Avoid unique slug collisions with legacy rows
+            $slugClash = Module::query()->where('slug', $module->slug);
+            if ($module->exists) {
+                $slugClash->where('id', '!=', $module->id);
+            }
+            if ($slugClash->exists()) {
+                $module->slug = Str::slug($title).'-'.$order;
+            }
+            $module->save();
+            $keptModuleIds[] = $module->id;
 
             for ($i = 1; $i <= 2; $i++) {
                 $lessonTitle = $title.' — Leçon '.$i;
@@ -116,33 +130,42 @@ class DatabaseSeeder extends Seeder
                 );
             }
         }
+        Module::query()->whereNotIn('id', $keptModuleIds)->update(['is_published' => false]);
 
         $testimonials = [
-            ['Aïcha K.', 'Fondatrice traiteur', 'Bénin', 'FoodLab m\'a permis de fixer enfin des prix rentables.', 5],
-            ['Moussa D.', 'Gérant snack', 'Sénégal', 'Les modules sont clairs et adaptés à l\'Afrique de l\'Ouest.', 5],
-            ['Fatou B.', 'Pâtissière', 'Côte d\'Ivoire', 'Le calculateur PDF est un vrai gain de temps.', 4],
+            ['Awa Diop', 'Fondatrice, Mama Sauces — Dakar 🇸🇳', 'Sénégal', 'En 6 semaines j\'ai lancé ma gamme de sauces pimentées. Le calculateur m\'a évité de vendre à perte dès le départ. Aujourd\'hui je fais 800 000 FCFA de CA mensuel.', 5],
+            ['Kouassi Mensah', 'Fondateur, Krou Snacks — Abidjan 🇨🇮', 'Côte d\'Ivoire', 'FoodLab m\'a donné la méthode que je n\'avais pas. Aujourd\'hui mes snacks sont distribués dans 12 boutiques à Abidjan. Mon chiffre d\'affaires a triplé en 4 mois.', 5],
+            ['Fatou Camara', 'Fondatrice, Bissap Premium — Conakry 🇬🇳', 'Guinée', 'La communauté est en or. Les sessions Q&R débloquent en 30 min ce qui m\'aurait pris des semaines. Mon bissap est maintenant vendu dans 3 hôtels de Conakry.', 5],
         ];
+        Testimonial::query()->delete();
         foreach ($testimonials as $i => [$name, $role, $country, $content, $rating]) {
-            Testimonial::updateOrCreate(
-                ['author_name' => $name, 'content' => $content],
-                [
-                    'author_role' => $role,
-                    'country' => $country,
-                    'rating' => $rating,
-                    'is_published' => true,
-                    'order' => $i + 1,
-                ]
-            );
+            Testimonial::create([
+                'author_name' => $name,
+                'author_role' => $role,
+                'country' => $country,
+                'content' => $content,
+                'rating' => $rating,
+                'is_published' => true,
+                'order' => $i + 1,
+            ]);
         }
 
         $faqs = [
-            ['Quels moyens de paiement acceptez-vous ?', 'Stripe (carte) et Mobile Money via KKiaPay / FedaPay selon configuration.'],
-            ['Quelle est la différence Starter / Premium ?', 'Starter débloque les modules 1 à 3. Premium débloque les 6 modules, le parcours certifiant et le certificat QR.'],
-            ['Puis-je upgrader plus tard ?', 'Oui, passez de Starter à Premium à tout moment depuis la page Plans.'],
-            ['Le certificat est-il inclus ?', 'Le certificat PDF + QR est délivré automatiquement à la fin du parcours Premium.'],
+            ['À qui s\'adresse FoodLab Academy ?', 'À toute personne qui veut transformer une idée alimentaire en produit rentable : entrepreneur·e débutant·e, artisan, restaurateur, ou employé en reconversion. Aucune connaissance technique préalable n\'est requise.'],
+            ['Faut-il déjà avoir un produit ?', 'Non. Le programme commence depuis l\'idée. On vous aide à identifier, développer et tester votre produit étape par étape, même si vous partez de zéro.'],
+            ['Combien de temps dure le programme ?', 'Le parcours est conçu pour 30 jours à raison de 1h à 2h par jour. Mais vous avez accès à vie au contenu, vous pouvez donc progresser à votre propre rythme selon votre emploi du temps.'],
+            ['Quels moyens de paiement acceptez-vous ?', 'Nous acceptons : Orange Money, MTN Money, Moov Money, Wave, et les cartes bancaires internationales via Stripe. Le paiement est sécurisé et vous recevez un reçu immédiatement.'],
+            ['Y a-t-il une garantie ?', 'Oui. Nous offrons une garantie satisfait ou remboursé de 14 jours sans condition. Si le programme ne correspond pas à vos attentes, contactez-nous et nous vous remboursons intégralement.'],
+            ['Puis-je accéder au contenu hors ligne ?', 'Les vidéos nécessitent une connexion internet. En revanche, tous les documents, templates et ressources téléchargeables peuvent être sauvegardés sur votre appareil pour un accès hors ligne.'],
+            ['Vais-je obtenir un certificat ?', 'Oui, les membres Premium reçoivent un certificat officiel FoodLab Academy après validation des 6 modules. Il est généré automatiquement en PDF avec un QR code de vérification. Les membres Starter reçoivent un certificat de participation.'],
+            ['Les formations sont-elles en français ?', 'Oui, 100% en français. Le programme est spécialement adapté aux réalités des marchés d\'Afrique francophone avec des exemples concrets tirés du Bénin, Côte d\'Ivoire, Sénégal, Cameroun, Togo et Burkina Faso.'],
+            ['Puis-je passer de Starter à Premium plus tard ?', 'Absolument. Vous pouvez upgrader à tout moment. Votre progression Starter est conservée et vous accédez immédiatement aux fonctionnalités Premium dès le paiement effectué.'],
+            ['Comment fonctionne le calculateur de coût de revient ?', 'Vous entrez vos coûts (ingrédients, emballage, main-d\'œuvre, transport) et le calculateur détermine automatiquement votre coût de revient par unité, le prix de vente recommandé selon votre marge cible, et votre seuil de rentabilité. La version Premium permet l\'export en PDF et Excel.'],
         ];
+        Faq::query()->delete();
         foreach ($faqs as $i => [$q, $a]) {
-            Faq::updateOrCreate(['question' => $q], [
+            Faq::create([
+                'question' => $q,
                 'answer' => $a,
                 'order' => $i + 1,
                 'is_published' => true,
@@ -150,7 +173,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $legals = [
-            'cgv' => ['Conditions Générales de Vente', "<h2>Objet</h2><p>Les présentes CGV régissent l'accès aux formations FoodLab Academy.</p><h2>Tarifs</h2><p>Les prix Starter et Premium sont indiqués TTC sur le site.</p><h2>Accès</h2><p>L'accès aux modules est activé après confirmation du paiement.</p>"],
+            'cgv' => ['Conditions Générales de Vente', "<h2>Objet</h2><p>Les présentes CGV régissent l'accès aux formations FoodLab Academy et aux produits numériques associés (ex. kits PDF).</p><h2>Tarifs</h2><p>Les prix Starter (gratuit) et Premium sont indiqués TTC sur le site. Les kits TasteBox sont facturés séparément.</p><h2>Accès</h2><p>L'accès aux modules est activé après confirmation du paiement (ou immédiatement pour le plan Starter gratuit).</p><h2>Garanties</h2><p>Formation Academy : garantie satisfait ou remboursé de 14 jours. Produits TasteBox : garantie 7 jours, sauf mention contraire sur la fiche produit.</p>"],
             'mentions-legales' => ['Mentions légales', "<h2>Éditeur</h2><p>FoodLab Academy — formation pour métiers de bouche.</p><h2>Contact</h2><p>contact@foodlab.test</p>"],
             'confidentialite' => ['Politique de confidentialité', "<h2>Données collectées</h2><p>Compte, profil (pays, secteur, niveau), progression pédagogique et paiements.</p><h2>Finalités</h2><p>Fourniture du service LMS, facturation et support.</p><h2>Cookies</h2><p>Cookies techniques de session et préférences (bannière cookies).</p>"],
         ];
