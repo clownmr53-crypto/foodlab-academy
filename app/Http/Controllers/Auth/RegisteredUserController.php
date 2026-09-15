@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -42,10 +41,21 @@ class RegisteredUserController extends Controller
             'plan' => null,
         ]);
 
+        // MVP / demo without real SMTP: mark verified so MustVerifyEmail does not block access.
+        // Set AUTO_VERIFY_EMAIL=false + a real MAIL_MAILER (smtp/Brevo/SendGrid) for production email verification.
+        if ($this->shouldAutoVerifyEmail()) {
+            $user->forceFill(['email_verified_at' => now()])->save();
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    protected function shouldAutoVerifyEmail(): bool
+    {
+        return (bool) config('foodlab.auto_verify_email');
     }
 }

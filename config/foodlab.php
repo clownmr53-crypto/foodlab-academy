@@ -52,4 +52,20 @@ return [
         'issuer' => env('FOODLAB_CERT_ISSUER', 'FoodLab Academy'),
         'title' => 'Certification Premium FoodLab Academy',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auto-verify email on registration (MVP / no SMTP)
+    |--------------------------------------------------------------------------
+    |
+    | When true, new users get email_verified_at set immediately so they are
+    | not stuck on the verify-email page. Defaults to true when MAIL_MAILER
+    | is log/array (no real SMTP). Set AUTO_VERIFY_EMAIL=false and configure
+    | a real mailer (Brevo, SendGrid, SMTP) when going official.
+    |
+    */
+    'auto_verify_email' => env('AUTO_VERIFY_EMAIL') !== null && env('AUTO_VERIFY_EMAIL') !== ''
+        ? filter_var(env('AUTO_VERIFY_EMAIL'), FILTER_VALIDATE_BOOL)
+        : in_array(env('MAIL_MAILER', 'log'), ['log', 'array'], true),
+
 ];

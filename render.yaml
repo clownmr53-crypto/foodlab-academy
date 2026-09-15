@@ -42,6 +42,10 @@ services:
         value: fr
       - key: APP_FALLBACK_LOCALE
         value: fr
+      - key: AUTO_VERIFY_EMAIL
+        value: "true"
+      - key: MAIL_MAILER
+        value: log
 
 databases:
   - name: foodlab-db

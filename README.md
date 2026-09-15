@@ -95,6 +95,10 @@ Coller la valeur dans Render → Environment → `APP_KEY` (format `base64:...`)
 | `DB_CONNECTION` | `pgsql` |
 | `DATABASE_URL` | fourni par le Postgres Render (ou Neon/Supabase) |
 | `SEED_ON_DEPLOY` | `true` une fois pour peupler la démo, puis `false` |
+| `APP_LOCALE` / `APP_FALLBACK_LOCALE` | `fr` |
+| `AUTO_VERIFY_EMAIL` | `true` (MVP sans SMTP) — mettre `false` + vrai SMTP pour la prod officielle |
+| `MAIL_MAILER` | `log` sur Render MVP ; `smtp` + Brevo/SendGrid en officiel |
+
 
 SQLite reste supporté en local (`DB_CONNECTION=sqlite`). En production, utiliser **pgsql** via `DATABASE_URL`.
 
@@ -105,6 +109,17 @@ SQLite reste supporté en local (`DB_CONNECTION=sqlite`). En production, utilise
 3. Renseigner `APP_KEY`, `APP_URL`, et éventuellement Stripe / Mobile Money / Bunny.
 4. Premier déploiement : mettre `SEED_ON_DEPLOY=true` pour les comptes démo, puis repasser à `false`.
 5. Configurer les webhooks Stripe / KKiaPay / FedaPay vers `https://<host>/webhooks/...`.
+
+
+### E-mail & vérification (MVP Render)
+
+Render n'offre pas de SMTP réel. Pour le MVP / démo :
+
+- À l'inscription, l'e-mail est **auto-vérifié** (`email_verified_at`) lorsque `AUTO_VERIFY_EMAIL=true` **ou** lorsque `MAIL_MAILER` vaut `log` / `array` (défaut).
+- Les routes / UI de vérification et de reset mot de passe restent en place pour plus tard.
+- Pour passer en officiel : configurer un vrai mailer (Brevo, SendGrid, SMTP), puis `AUTO_VERIFY_EMAIL=false`.
+
+Les messages de validation Laravel sont en **français** (`lang/fr`). Google OAuth est **hors scope** (V2).
 
 HTTPS : en `APP_ENV=production`, l'app force le schéma HTTPS et fait confiance aux proxies Render (`TrustProxies`).
 
