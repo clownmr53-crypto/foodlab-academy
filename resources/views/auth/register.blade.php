@@ -47,4 +47,6 @@
             <x-primary-button class="ms-4">Créer mon compte</x-primary-button>
         </div>
     </form>
+
+    <x-google-auth-button label="S'inscrire avec Google" />
 </x-guest-layout>

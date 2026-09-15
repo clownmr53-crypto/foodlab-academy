@@ -64,8 +64,30 @@ return [
     | a real mailer (Brevo, SendGrid, SMTP) when going official.
     |
     */
-    'auto_verify_email' => env('AUTO_VERIFY_EMAIL') !== null && env('AUTO_VERIFY_EMAIL') !== ''
-        ? filter_var(env('AUTO_VERIFY_EMAIL'), FILTER_VALIDATE_BOOL)
-        : in_array(env('MAIL_MAILER', 'log'), ['log', 'array'], true),
+    /*
+    | Explicit AUTO_VERIFY_EMAIL wins. Otherwise: auto-verify only when no real
+    | mailer is configured (log/array, or smtp without host/username).
+    | When MAIL_MAILER=smtp (+ MAIL_HOST/USERNAME) or another real driver is set,
+    | verification emails are sent and users are NOT auto-verified.
+    */
+    'auto_verify_email' => (static function (): bool {
+        $explicit = env('AUTO_VERIFY_EMAIL');
+        if ($explicit !== null && $explicit !== '') {
+            return filter_var($explicit, FILTER_VALIDATE_BOOL);
+        }
+
+        $mailer = env('MAIL_MAILER', 'log');
+
+        if (in_array($mailer, ['log', 'array', null, ''], true)) {
+            return true;
+        }
+
+        if ($mailer === 'smtp') {
+            return ! filled(env('MAIL_HOST')) || ! filled(env('MAIL_USERNAME'));
+        }
+
+        // ses, postmark, resend, mailgun, sendmail, etc. → real delivery
+        return false;
+    })(),
 
 ];

@@ -44,4 +44,6 @@
             </x-primary-button>
         </div>
     </form>
+
+    <x-google-auth-button label="Continuer avec Google" />
 </x-guest-layout>

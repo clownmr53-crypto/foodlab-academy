@@ -113,13 +113,44 @@ SQLite reste supporté en local (`DB_CONNECTION=sqlite`). En production, utilise
 
 ### E-mail & vérification (MVP Render)
 
-Render n'offre pas de SMTP réel. Pour le MVP / démo :
+Render n'offre pas de SMTP réel par défaut. Pour le MVP / démo :
 
-- À l'inscription, l'e-mail est **auto-vérifié** (`email_verified_at`) lorsque `AUTO_VERIFY_EMAIL=true` **ou** lorsque `MAIL_MAILER` vaut `log` / `array` (défaut).
-- Les routes / UI de vérification et de reset mot de passe restent en place pour plus tard.
-- Pour passer en officiel : configurer un vrai mailer (Brevo, SendGrid, SMTP), puis `AUTO_VERIFY_EMAIL=false`.
+- À l'inscription, l'e-mail est **auto-vérifié** lorsque `AUTO_VERIFY_EMAIL=true` **ou** lorsque `MAIL_MAILER` vaut `log` / `array` (et SMTP non configuré).
+- Les routes / UI de vérification et de reset mot de passe restent en place.
+- Les messages de validation Laravel sont en **français** (`lang/fr`).
 
-Les messages de validation Laravel sont en **français** (`lang/fr`). Google OAuth est **hors scope** (V2).
+### Google OAuth (Socialite)
+
+Boutons « Continuer / S'inscrire avec Google » sur login et register.
+
+1. Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client ID (Web)
+2. Authorized redirect URI : `https://<votre-host>/auth/google/callback`
+3. Sur Render, définir :
+
+| Variable | Exemple |
+|----------|---------|
+| `GOOGLE_CLIENT_ID` | (client id) |
+| `GOOGLE_CLIENT_SECRET` | (secret) |
+| `GOOGLE_REDIRECT_URI` | `https://<votre-host>/auth/google/callback` |
+
+Sans ces variables, le bouton renvoie une erreur claire (pas de crash).
+
+### E-mail SMTP / Brevo (prod officielle)
+
+| Variable | Exemple Brevo |
+|----------|----------------|
+| `MAIL_MAILER` | `smtp` |
+| `MAIL_HOST` | `smtp-relay.brevo.com` |
+| `MAIL_PORT` | `587` |
+| `MAIL_ENCRYPTION` | `tls` (ou `MAIL_SCHEME=smtp`) |
+| `MAIL_USERNAME` | e-mail compte Brevo |
+| `MAIL_PASSWORD` | clé SMTP Brevo |
+| `MAIL_FROM_ADDRESS` | `noreply@votre-domaine.com` |
+| `MAIL_FROM_NAME` | `FoodLab Academy` |
+| `AUTO_VERIFY_EMAIL` | `false` |
+
+Quand un vrai SMTP est configuré (`MAIL_MAILER=smtp` + host/username), les nouveaux comptes **ne sont plus auto-vérifiés** : Laravel envoie l'e-mail de vérification. Sans SMTP (`MAIL_MAILER=log`), `AUTO_VERIFY_EMAIL` reste le fallback MVP.
+
 
 HTTPS : en `APP_ENV=production`, l'app force le schéma HTTPS et fait confiance aux proxies Render (`TrustProxies`).
 
@@ -149,4 +180,4 @@ Après extraction : `composer install`, `cp .env.example .env`, `key:generate`, 
 
 ## Hors scope (V2)
 
-Google OAuth, forum, coaching, Q&A, bibliothèque de templates, Chart.js, comparaison marché, certificat Starter, Meta Pixel/GTM, WhatsApp flottant, load tests.
+Forum, coaching, Q&A, bibliothèque de templates, Chart.js, comparaison marché, certificat Starter, Meta Pixel/GTM, WhatsApp flottant, load tests.

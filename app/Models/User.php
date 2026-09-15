@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[Fillable([
-    'name', 'email', 'password', 'country', 'sector', 'level',
+    'name', 'email', 'google_id', 'password', 'country', 'sector', 'level',
     'role', 'plan', 'plan_activated_at',
 ])]
 #[Hidden(['password', 'remember_token'])]
