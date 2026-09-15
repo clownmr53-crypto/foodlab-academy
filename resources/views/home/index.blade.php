@@ -227,24 +227,6 @@
     <p class="text-center text-xs text-slate-500 mt-6">Moyens de paiement Premium : {{ implode(' · ', $paymentMethods) }}</p>
 </section>
 
-{{-- Testimonials --}}
-<section class="bg-white border-y border-stone-200 py-16">
-    <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">Ils ont lancé leur produit avec FoodLab.</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach($testimonials as $t)
-                <blockquote class="rounded-xl bg-stone-50 p-5 border border-stone-100">
-                    <p class="text-slate-700 mb-3">“{{ $t->content }}”</p>
-                    <footer class="text-sm font-semibold">{{ $t->author_name }} — {{ $t->author_role }}</footer>
-                    @if($t->country)
-                        <p class="text-xs text-slate-500 mt-1">{{ $t->country }}</p>
-                    @endif
-                </blockquote>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 {{-- FAQ accordion --}}
 <section class="max-w-3xl mx-auto px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center">Questions fréquentes.</h2>

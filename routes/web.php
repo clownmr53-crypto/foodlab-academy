@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\ModuleController as AdminModuleController;
 use App\Http\Controllers\Admin\QaSessionController as AdminQaController;
 use App\Http\Controllers\Admin\ResourceTemplateController as AdminTemplateController;
-use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CoachingController;
@@ -90,7 +89,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/', AdminDashboardController::class)->name('dashboard');
     Route::resource('modules', AdminModuleController::class)->except(['show']);
     Route::resource('modules.lessons', AdminLessonController::class)->except(['show']);
-    Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);
     Route::resource('faqs', AdminFaqController::class)->except(['show']);
     Route::get('legal', [AdminLegalController::class, 'index'])->name('legal.index');
     Route::get('legal/{legal}/edit', [AdminLegalController::class, 'edit'])->name('legal.edit');

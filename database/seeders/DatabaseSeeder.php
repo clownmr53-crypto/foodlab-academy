@@ -9,7 +9,6 @@ use App\Models\Lesson;
 use App\Models\Module;
 use App\Models\QaSession;
 use App\Models\ResourceTemplate;
-use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -132,23 +131,6 @@ class DatabaseSeeder extends Seeder
         }
         Module::query()->whereNotIn('id', $keptModuleIds)->update(['is_published' => false]);
 
-        $testimonials = [
-            ['Awa Diop', 'Fondatrice, Mama Sauces — Dakar 🇸🇳', 'Sénégal', 'En 6 semaines j\'ai lancé ma gamme de sauces pimentées. Le calculateur m\'a évité de vendre à perte dès le départ. Aujourd\'hui je fais 800 000 FCFA de CA mensuel.', 5],
-            ['Kouassi Mensah', 'Fondateur, Krou Snacks — Abidjan 🇨🇮', 'Côte d\'Ivoire', 'FoodLab m\'a donné la méthode que je n\'avais pas. Aujourd\'hui mes snacks sont distribués dans 12 boutiques à Abidjan. Mon chiffre d\'affaires a triplé en 4 mois.', 5],
-            ['Fatou Camara', 'Fondatrice, Bissap Premium — Conakry 🇬🇳', 'Guinée', 'La communauté est en or. Les sessions Q&R débloquent en 30 min ce qui m\'aurait pris des semaines. Mon bissap est maintenant vendu dans 3 hôtels de Conakry.', 5],
-        ];
-        Testimonial::query()->delete();
-        foreach ($testimonials as $i => [$name, $role, $country, $content, $rating]) {
-            Testimonial::create([
-                'author_name' => $name,
-                'author_role' => $role,
-                'country' => $country,
-                'content' => $content,
-                'rating' => $rating,
-                'is_published' => true,
-                'order' => $i + 1,
-            ]);
-        }
 
         $faqs = [
             ['À qui s\'adresse FoodLab Academy ?', 'À toute personne qui veut transformer une idée alimentaire en produit rentable : entrepreneur·e débutant·e, artisan, restaurateur, ou employé en reconversion. Aucune connaissance technique préalable n\'est requise.'],

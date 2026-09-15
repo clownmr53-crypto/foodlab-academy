@@ -55,7 +55,7 @@ Webhooks :
 - LMS 6 modules (4–6 verrouillés Starter), progression, embeds vidéo
 - Calculateur coût de revient + PDF + Excel
 - Certificat Premium PDF + QR, vérification publique `/verify-certificate`
-- Admin : modules/leçons, témoignages, FAQ, pages légales, messages contact
+- Admin : modules/leçons, FAQ, pages légales, messages contact
 - CGV / mentions / confidentialité + bannière cookies
 
 ### Backlog V2
