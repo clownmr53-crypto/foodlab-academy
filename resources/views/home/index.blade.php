@@ -18,14 +18,12 @@
 <section class="bg-gradient-to-br from-emerald-700 to-teal-800 text-white">
     <div class="max-w-7xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
         <div>
-            <p class="uppercase tracking-wide text-emerald-200 text-sm mb-2">Pour les entrepreneurs africains</p>
             <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Lancez votre premier produit alimentaire rentable en 30 jours</h1>
             <p class="text-emerald-50 text-lg mb-8">Apprenez à créer, produire et vendre votre propre produit alimentaire grâce à une méthode pratique conçue pour les entrepreneurs africains.</p>
             <div class="flex flex-wrap gap-3">
                 <a href="{{ route('register') }}" class="rounded-xl bg-white text-emerald-800 px-5 py-3 font-semibold">Commencer gratuitement</a>
                 <a href="#plans" class="rounded-xl border border-white/40 px-5 py-3 font-semibold">Voir les offres</a>
             </div>
-            <p class="mt-6 text-sm text-emerald-100">+1 200 entrepreneurs déjà inscrits · +340% marge sur le 1er produit</p>
         </div>
         <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
             <h2 class="font-semibold text-xl mb-4">Ce que vous obtenez</h2>
@@ -36,42 +34,6 @@
                 <li>✓ Certificat officiel + QR (parcours Premium)</li>
             </ul>
         </div>
-    </div>
-</section>
-
-{{-- Stats bar --}}
-<section class="bg-white border-b border-stone-200">
-    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-        <div>
-            <p class="text-2xl font-bold text-emerald-700">1 200+</p>
-            <p class="text-xs text-slate-500 mt-1">entrepreneurs formés</p>
-        </div>
-        <div>
-            <p class="text-2xl font-bold text-emerald-700">+340%</p>
-            <p class="text-xs text-slate-500 mt-1">marge sur le 1er produit</p>
-        </div>
-        <div>
-            <p class="text-2xl font-bold text-emerald-700">30j</p>
-            <p class="text-xs text-slate-500 mt-1">pour lancer votre produit</p>
-        </div>
-        <div>
-            <p class="text-2xl font-bold text-emerald-700">6</p>
-            <p class="text-xs text-slate-500 mt-1">pays couverts</p>
-        </div>
-        <div class="col-span-2 md:col-span-1">
-            <p class="text-2xl font-bold text-emerald-700">94%</p>
-            <p class="text-xs text-slate-500 mt-1">taux de satisfaction</p>
-        </div>
-    </div>
-</section>
-
-{{-- Vu sur — text badges only --}}
-<section class="bg-stone-100 border-b border-stone-200">
-    <div class="max-w-7xl mx-auto px-4 py-5 flex flex-wrap items-center justify-center gap-3 text-sm">
-        <span class="text-slate-500 font-medium uppercase tracking-wide text-xs">Vu sur</span>
-        @foreach(['RFI', 'Jeune Afrique', 'Forbes Africa', 'BBC Afrique', 'Africa CEO Forum'] as $media)
-            <span class="rounded-full bg-white border border-stone-200 px-3 py-1 text-slate-600 font-medium">{{ $media }}</span>
-        @endforeach
     </div>
 </section>
 
@@ -155,25 +117,21 @@
                         @if($module->is_premium_only)<span class="ml-1 text-amber-700">Premium</span>@endif
                     </p>
                     <h3 class="font-semibold text-lg mb-2">{{ $module->title }}</h3>
-                    <p class="text-sm text-slate-600 mb-3">{{ $module->description }}</p>
-                    @if($module->deliverable)
-                        <p class="text-sm text-emerald-800 bg-emerald-50 rounded-lg px-3 py-2">📄 Livrable : <strong>{{ $module->deliverable }}</strong></p>
-                    @endif
+                    <p class="text-sm text-slate-600">{{ $module->description }}</p>
                 </div>
             @empty
                 @foreach([
-                    ['01', 'Conception du produit alimentaire', 'Développement de recette, choix du format et packaging, positionnement marché.', 'Fiche produit complète'],
-                    ['02', 'Calcul des coûts de revient', 'Ingrédients, emballage, main-d\'œuvre, transport et logistique.', 'Tableau de coûts complet'],
-                    ['03', 'Fixation des prix et stratégie de marge', 'Analyse concurrence, calcul de marge optimale, stratégies de pricing.', 'Grille tarifaire validée'],
-                    ['04', 'Réglementation et normes alimentaires', 'Normes sanitaires ANADA/FDA, procédures de certification, étiquetage.', 'Dossier de certification'],
-                    ['05', 'Stratégie de lancement et distribution', 'Canaux de distribution, logistique de livraison, gestion des stocks.', 'Plan de distribution'],
-                    ['06', 'Marketing et vente pour produits alimentaires', 'Branding, marketing digital, techniques de vente B2B et B2C.', 'Plan marketing 90 jours'],
-                ] as [$n, $title, $desc, $liv])
+                    ['01', 'Conception du produit alimentaire', 'Développement de recette, choix du format et packaging, positionnement marché.'],
+                    ['02', 'Calcul des coûts de revient', 'Ingrédients, emballage, main-d\'œuvre, transport et logistique.'],
+                    ['03', 'Fixation des prix et stratégie de marge', 'Analyse concurrence, calcul de marge optimale, stratégies de pricing.'],
+                    ['04', 'Réglementation et normes alimentaires', 'Normes sanitaires ANADA/FDA, procédures de certification, étiquetage.'],
+                    ['05', 'Stratégie de lancement et distribution', 'Canaux de distribution, logistique de livraison, gestion des stocks.'],
+                    ['06', 'Marketing et vente pour produits alimentaires', 'Branding, marketing digital, techniques de vente B2B et B2C.'],
+                ] as [$n, $title, $desc])
                     <div class="rounded-2xl bg-white border border-stone-200 p-5 shadow-sm">
                         <p class="text-xs font-semibold text-emerald-700 mb-1">Module {{ $n }}</p>
                         <h3 class="font-semibold text-lg mb-2">{{ $title }}</h3>
-                        <p class="text-sm text-slate-600 mb-3">{{ $desc }}</p>
-                        <p class="text-sm text-emerald-800 bg-emerald-50 rounded-lg px-3 py-2">📄 Livrable : <strong>{{ $liv }}</strong></p>
+                        <p class="text-sm text-slate-600">{{ $desc }}</p>
                     </div>
                 @endforeach
             @endforelse
