@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('payments.checkout');
     Route::post('/payments/{payment}/simulate', [PaymentController::class, 'simulateSuccess'])->name('payments.simulate');
     Route::get('/payments/{payment}/success', [PaymentController::class, 'success'])->name('payments.success');
+    Route::get('/payments/{payment}/fedapay/callback', [PaymentController::class, 'fedaPayCallback'])->name('payments.fedapay.callback');
 
     Route::middleware('plan:starter')->group(function () {
         Route::get('/lms', [LmsController::class, 'index'])->name('lms.index');

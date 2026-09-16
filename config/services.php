@@ -41,4 +41,12 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/auth/google/callback'),
     ],
 
+
+    'fedapay' => [
+        'public_key' => env('FEDAPAY_PUBLIC_KEY'),
+        'secret_key' => env('FEDAPAY_SECRET_KEY'),
+        'mode' => env('FEDAPAY_MODE', 'sandbox'),
+        'webhook_secret' => env('FEDAPAY_WEBHOOK_SECRET'),
+    ],
+
 ];

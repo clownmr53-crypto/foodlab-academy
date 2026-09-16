@@ -59,7 +59,8 @@ return [
 
 
     'payments' => [
-        'default_mm_provider' => env('FOODLAB_MM_PROVIDER', 'kkiapay'),
+        // Prefer MOBILE_MONEY_PROVIDER; fall back to FOODLAB_MM_PROVIDER; default fedapay
+        'default_mm_provider' => env('MOBILE_MONEY_PROVIDER', env('FOODLAB_MM_PROVIDER', 'fedapay')),
         'stripe' => [
             'key' => env('STRIPE_KEY'),
             'secret' => env('STRIPE_SECRET'),
@@ -75,7 +76,25 @@ return [
         'fedapay' => [
             'public_key' => env('FEDAPAY_PUBLIC_KEY'),
             'secret_key' => env('FEDAPAY_SECRET_KEY'),
-            'sandbox' => filter_var(env('FEDAPAY_SANDBOX', true), FILTER_VALIDATE_BOOL),
+            // FEDAPAY_MODE=sandbox|live preferred; FEDAPAY_SANDBOX kept for backward compat
+            'mode' => (static function (): string {
+                $mode = env('FEDAPAY_MODE');
+                if ($mode !== null && $mode !== '') {
+                    return strtolower((string) $mode) === 'live' ? 'live' : 'sandbox';
+                }
+                $sandbox = filter_var(env('FEDAPAY_SANDBOX', true), FILTER_VALIDATE_BOOL);
+
+                return $sandbox ? 'sandbox' : 'live';
+            })(),
+            'sandbox' => (static function (): bool {
+                $mode = env('FEDAPAY_MODE');
+                if ($mode !== null && $mode !== '') {
+                    return strtolower((string) $mode) !== 'live';
+                }
+
+                return filter_var(env('FEDAPAY_SANDBOX', true), FILTER_VALIDATE_BOOL);
+            })(),
+            'webhook_secret' => env('FEDAPAY_WEBHOOK_SECRET'),
         ],
     ],
 

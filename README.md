@@ -38,7 +38,7 @@ Ouvrir http://127.0.0.1:8000
 Voir `.env.example` :
 
 - **Plans** : `FOODLAB_STARTER_PRICE`, `FOODLAB_PREMIUM_PRICE`, `FOODLAB_CURRENCY`
-- **Paiements** : Stripe (`STRIPE_*`), Mobile Money (`FOODLAB_MM_PROVIDER=kkiapay` ou `fedapay`, clés KKiaPay / FedaPay)
+- **Paiements** : Stripe (`STRIPE_*`), Mobile Money FedaPay par défaut (`MOBILE_MONEY_PROVIDER=fedapay`, `FEDAPAY_*`)
 - **Vidéo** : `FOODLAB_VIDEO_PROVIDER=bunny` (ou `vimeo`), `BUNNY_LIBRARY_ID`, `VIMEO_ACCESS_TOKEN`
 - En local, le checkout propose une **simulation de paiement** (sandbox) si les clés ne sont pas renseignées.
 
@@ -145,6 +145,23 @@ Boutons « Continuer / S'inscrire avec Google » sur login et register.
 | `GOOGLE_REDIRECT_URI` | `https://<votre-host>/auth/google/callback` |
 
 Sans ces variables, le bouton renvoie une erreur claire (pas de crash).
+
+### FedaPay Mobile Money (Render)
+
+1. Créer un compte sur [FedaPay](https://fedapay.com) (sandbox puis live).
+2. Dashboard → **API** : copier la **clé publique** et la **clé secrète**.
+3. Sur Render → Environment, définir :
+
+| Variable | Description |
+|----------|-------------|
+| `FEDAPAY_PUBLIC_KEY` | Clé publique FedaPay |
+| `FEDAPAY_SECRET_KEY` | Clé secrète FedaPay |
+| `FEDAPAY_MODE` | `sandbox` ou `live` |
+| `FEDAPAY_WEBHOOK_SECRET` | (optionnel) secret du webhook Workbench |
+| `MOBILE_MONEY_PROVIDER` | `fedapay` (défaut) |
+
+4. Workbench → Webhooks → URL : `https://<votre-host>/webhooks/mobile-money` (événement `transaction.approved`).
+5. Sans clés, le checkout bascule en **simulation** (sandbox local).
 
 ### E-mail SMTP / Brevo (prod officielle)
 

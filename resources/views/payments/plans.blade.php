@@ -49,11 +49,21 @@
                             <input type="hidden" name="plan" value="{{ $key }}">
                             <label class="block text-sm">Moyen de paiement
                                 <select name="provider" class="mt-1 w-full rounded-md border-stone-300">
-                                    <option value="fake">Simulation (sandbox local)</option>
-                                    <option value="stripe">Carte (Stripe)</option>
-                                    <option value="{{ $mmProvider }}">Mobile Money ({{ ucfirst($mmProvider) }})</option>
+                                    @if($mmProvider === 'fedapay')
+                                        <option value="fedapay" selected>Mobile Money via FedaPay (MTN · Orange · Moov · Wave)</option>
+                                    @else
+                                        <option value="{{ $mmProvider }}" selected>Mobile Money ({{ ucfirst($mmProvider) }})</option>
+                                        <option value="fedapay">Mobile Money via FedaPay (MTN · Orange · Moov · Wave)</option>
+                                    @endif
+                                    <option value="stripe">Carte bancaire (Stripe)</option>
+                                    @if(app()->environment('local', 'testing') || !($fedapayReady ?? false))
+                                        <option value="fake">Simulation (sandbox local)</option>
+                                    @endif
                                 </select>
                             </label>
+                            @if($mmProvider === 'fedapay')
+                                <p class="text-xs text-slate-500">FedaPay : MTN Money, Orange Money, Moov Money, Wave.</p>
+                            @endif
                             <button class="w-full rounded-lg bg-emerald-600 text-white py-2.5 font-semibold">
                                 {{ auth()->user()->plan === 'starter' && $key === 'premium' ? 'Upgrader vers Premium' : 'Souscrire Premium' }}
                             </button>

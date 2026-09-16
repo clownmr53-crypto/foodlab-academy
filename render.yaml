@@ -77,6 +77,17 @@ services:
       - key: WHATSAPP_NUMBER
         sync: false
 
+      - key: FEDAPAY_PUBLIC_KEY
+        sync: false
+      - key: FEDAPAY_SECRET_KEY
+        sync: false
+      - key: FEDAPAY_MODE
+        value: sandbox
+      - key: FEDAPAY_WEBHOOK_SECRET
+        sync: false
+      - key: MOBILE_MONEY_PROVIDER
+        value: fedapay
+
 databases:
   - name: foodlab-db
     plan: basic_256mb
